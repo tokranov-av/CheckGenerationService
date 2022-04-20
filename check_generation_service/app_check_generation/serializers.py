@@ -10,8 +10,8 @@ def validate_bank_cart_number(bank_cart_number):
 
 class PaymentSerializer(serializers.Serializer):
     """Сериализатор для приема запроса оплаты."""
-    order_number = serializers.IntegerField(min_value=1)
-    bank_card = serializers.CharField(
-        max_length=8, min_length=8, validators=[validate_bank_cart_number]
-    )
+    id = serializers.IntegerField(min_value=1)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
+
+    items = serializers.ListField()
+
