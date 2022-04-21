@@ -18,6 +18,7 @@ class Printer(models.Model):
         verbose_name='Тип чека которые печатает принтер'
     )
     point_id = models.IntegerField(
+        db_index=True,
         validators=[MinValueValidator(1)],
         verbose_name='Точка к которой привязан принтер')
 
@@ -36,7 +37,6 @@ class Check(models.Model):
         ('kitchen', 'Кухня'),
         ('client', 'Клиент'),
     )
-
     STATUS = (
         ('new', 'Новый'),
         ('rendered', 'Отображенный'),
@@ -51,7 +51,7 @@ class Check(models.Model):
         verbose_name='Тип чека')
     order = models.JSONField(verbose_name='Информация о заказе')
     status = models.CharField(
-        choices=CHECK_TYPE, max_length=7, default='kitchen',
+        choices=STATUS, max_length=8, default='kitchen',
         verbose_name='Тип чека')
     pdf_file = models.FileField(
         upload_to='pdf/', verbose_name='Ссылка на созданный PDF-файл',

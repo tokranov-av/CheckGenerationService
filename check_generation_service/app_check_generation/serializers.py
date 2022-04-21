@@ -14,10 +14,10 @@ class ClientSerializer(serializers.Serializer):
 
 class MySerializer(serializers.Serializer):
     """Сериализатор для приема заказов."""
-
     id = serializers.IntegerField(min_value=1)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
     items = ItemsSerializer(many=True)
     client = ClientSerializer()
     address = serializers.CharField(max_length=255)
     point_id = serializers.IntegerField(min_value=1)
+
