@@ -1,17 +1,23 @@
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
 
 
-def validate_bank_cart_number(bank_cart_number):
-    """Проверка правильности ввода номера банковской карты."""
-    if not bank_cart_number.isdigit():
-        raise ValidationError('Номер карты должен состоять из 8 цифр')
+class ItemsSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+    quantity = serializers.IntegerField(min_value=1)
+    unit_price = serializers.IntegerField(min_value=1)
 
 
-class PaymentSerializer(serializers.Serializer):
-    """Сериализатор для приема запроса оплаты."""
+class ClientSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=255)
+    phone = serializers.IntegerField()
+
+
+class MySerializer(serializers.Serializer):
+    """Сериализатор для приема заказов."""
+
     id = serializers.IntegerField(min_value=1)
     price = serializers.DecimalField(max_digits=10, decimal_places=2)
-
-    items = serializers.ListField()
-
+    items = ItemsSerializer(many=True)
+    client = ClientSerializer()
+    address = serializers.CharField(max_length=255)
+    point_id = serializers.IntegerField(min_value=1)

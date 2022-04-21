@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from pprint import pprint
+from .serializers import MySerializer
 
 
 class OrdersAPIView(APIView):
     def post(self, request, format=None):
-        pprint(request.data)
+        data = MySerializer(data=request.data)
+        data.is_valid(raise_exception=True)
+        client = dict(data.data['client'])
         return Response(
             {'ok': 'Чеки успешно созданы'}, status=200
         )
