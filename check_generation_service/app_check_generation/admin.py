@@ -16,4 +16,4 @@ class CharacteristicAdmin(admin.ModelAdmin):
     list_display = ('id', 'printer', 'type', 'order', 'status', 'pdf_file')
     ordering = ('id',)
     list_display_links = ('id',)
-    list_filter = ('status',)
+    list_filter = ('status', 'printer', 'status',)

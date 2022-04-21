@@ -7,7 +7,8 @@ from .models import Check, Printer
 
 class OrdersAPIView(APIView):
 
-    def post(self, request, format=None):
+    @classmethod
+    def post(cls, request, format=None):
         order = MySerializer(data=request.data)
         order.is_valid(raise_exception=True)
         pprint(order.data)
