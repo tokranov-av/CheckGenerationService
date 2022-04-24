@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import OrderSerializer
-from pprint import pprint
 from .models import Check, Printer
 import django_rq
 from django.db import transaction
@@ -13,7 +12,6 @@ class OrdersAPIView(APIView):
         order = OrderSerializer(data=request.data)
         order.is_valid(raise_exception=True)
         order = order.data
-        pprint(order)
         checks = Check.objects.filter(order=order)
         if checks:
             return Response(
