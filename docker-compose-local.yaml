@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis
+
+  db:
+    image: postgres:9.6
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    links:
+      - redis
+
+volumes:
+  postgres_data:
