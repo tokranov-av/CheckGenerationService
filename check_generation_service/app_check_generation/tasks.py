@@ -5,6 +5,8 @@ from django.template.loader import render_to_string
 import os
 import django
 from django_rq import job
+from .models import Check
+from check_generation_service.settings import MEDIA_ROOT
 
 os.environ.setdefault(
     'DJANGO_SETTINGS_MODULE', 'check_generation_service.settings'
@@ -12,45 +14,36 @@ os.environ.setdefault(
 django.setup()
 
 
-context = {
-        "id": 123456,
-        "price": 780,
-        "items": [
-            {
-                "name": "Вкусная пицца",
-                "quantity": 2,
-                "unit_price": 250
-            },
-            {
-                "name": "Не менее вкусные роллы",
-                "quantity": 1,
-                "unit_price": 280
-            }
-        ],
-        "address": "г. Уфа, ул. Ленина, д. 42",
-        "client": {
-            "name": "Иван",
-            "phone": 9173332222
-        },
-        "point_id": 1
-    }
-
-
 @job
-def pdf_generation(data):
-    url = 'http://127.0.0.1:55003/'
-    html = render_to_string('client_check.html', context=data)
-    html = base64.b64encode(bytes(html, 'utf-8'))
-    data = {
-        'contents': str(html)[2:-1],
-    }
-    headers = {
-        'Content-Type': 'application/json',
-    }
-    response = requests.post(url, data=json.dumps(data), headers=headers)
-    print('Проверка')
-    with open('file.pdf', 'wb') as f:
-        f.write(response.content)
+def pdf_generation(order_data=None, check_type=None):
+    url = 'http://127.0.0.1:55000/'
+    pdf_file_name = 'file.pdf'
+    order_id = order_data.get('id')
 
+    if order_data and check_type == 'kitchen_check':
+        pdf_file_name = '{0}_kitchen.pdf'.format(order_id)
+        html = render_to_string('kitchen_check.html', context=order_data)
+        current_check = Check.objects.filter(
+            order=order_data, type='kitchen').first()
+    elif order_data and check_type == 'client_check':
+        pdf_file_name = '{0}_client.pdf'.format(order_id)
+        html = render_to_string('client_check.html', context=order_data)
+        current_check = Check.objects.filter(
+            order=order_data, type='client').first()
+    else:
+        html, current_check = None, None
 
-pdf_generation.delay(context)
+    if html:
+        html = base64.b64encode(bytes(html, 'utf-8'))
+        data = json.dumps(
+            {'contents': str(html)[2:-1]}
+        )
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url, data=data, headers=headers)
+
+        with open(os.path.join(MEDIA_ROOT, pdf_file_name), 'wb') as file:
+            file.write(response.content)
+
+        current_check.pdf_file = pdf_file_name
+        current_check.status = 'rendered'
+        current_check.save(update_fields=['status', 'pdf_file'])

@@ -55,6 +55,7 @@ class Check(models.Model):
         verbose_name='Тип чека')
     pdf_file = models.FileField(
         upload_to='pdf/', verbose_name='Ссылка на созданный PDF-файл',
+        blank=True,
         validators=[
             FileExtensionValidator(allowed_extensions=['pdf', ]),
         ]
