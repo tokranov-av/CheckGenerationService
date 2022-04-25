@@ -1,0 +1,17 @@
+# Git
+.git
+.gitignore
+
+# Docker
+.docker
+
+# Python
+check_generation_service/__pycache__/
+check_generation_service/*/__pycache__/
+check_generation_service/*/*/__pycache__/
+check_generation_service/*/*/*/__pycache__/
+.venv/
+venv/
+
+# Local PostgreSQL data
+db/

@@ -7,14 +7,6 @@ services:
     ports:
       - "6379:6379"
 
-  rq:
-    build: .
-    command: python manage.py rqworker default
-    links:
-      - redis
-    volumes:
-      - .:/app
-
   wkhtmltopdf:
     image: openlabs/docker-wkhtmltopdf-aas
     ports:
@@ -23,16 +15,16 @@ services:
   db:
     image: postgres:9.6
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - pg_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123456
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
 
   web:
     container_name: web_app
     build: .
-    command: sh -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -42,5 +34,13 @@ services:
     links:
       - redis
 
+  rq:
+    build: .
+    command: python manage.py rqworker default
+    links:
+      - redis
+    volumes:
+      - .:/app
+
 volumes:
-  postgres_data:
+  pg_data:
