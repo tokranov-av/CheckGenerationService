@@ -51,7 +51,7 @@ class Check(models.Model):
         verbose_name='Тип чека')
     order = models.JSONField(verbose_name='Информация о заказе')
     status = models.CharField(
-        choices=STATUS, max_length=8, default='kitchen',
+        choices=STATUS, max_length=8, default='new',
         verbose_name='Статус чека')
     pdf_file = models.FileField(
         upload_to='pdf/', verbose_name='Ссылка на созданный PDF-файл',

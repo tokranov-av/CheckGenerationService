@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from .models import Check
 
 
 class ItemsSerializer(serializers.Serializer):
@@ -21,3 +22,8 @@ class OrderSerializer(serializers.Serializer):
     address = serializers.CharField(max_length=255)
     point_id = serializers.IntegerField(min_value=1)
 
+
+class CheckSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Check
+        fields = ('id', )

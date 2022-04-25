@@ -1,9 +1,10 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .serializers import OrderSerializer
-from .models import Check, Printer
 import django_rq
 from django.db import transaction
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Check, Printer
+from .serializers import OrderSerializer, CheckSerializer
 
 
 class OrdersAPIView(APIView):
@@ -57,3 +58,20 @@ class OrdersAPIView(APIView):
         return Response(
             {'error': 'Возникла ошибка при создании чеков'}
         )
+
+
+class ChecksAPIView(APIView):
+
+    def get(self, request, format=None):
+        api_key = request.query_params.get('api_key', None)
+        if not api_key:
+            return Response(
+                {'error': 'Ошибка авторизации'}
+            )
+        printer = Printer.objects.filter(api_key=api_key).first()
+        if not printer:
+            return Response(
+                {'error': 'Ошибка авторизации'}
+            )
+        queryset = Check.objects.filter(printer=printer, status='rendered')
+        return Response({"checks": CheckSerializer(queryset, many=True).data})

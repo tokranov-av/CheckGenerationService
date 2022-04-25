@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-j9!+clj74()1z6dfqz8qf0wvo7bum^d3dz2xt!to!qbpy4w*qd'
@@ -19,7 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'app_check_generation.apps.AppCheckGenerationConfig',
-    "django_rq",
+    'app_check_print.apps.AppCheckPrintConfig',
+    'django_rq',
 ]
 
 MIDDLEWARE = [
@@ -53,23 +53,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'check_generation_service.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'db',
-        'PORT': 5432,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': '123456',
+#         'HOST': 'db',
+#         'PORT': 5432,
+#     }
+# }
 
 
 AUTH_PASSWORD_VALIDATORS = [
