@@ -5,16 +5,13 @@ from rest_framework.views import APIView
 from django.http import FileResponse
 
 from .models import Check, Printer
-from .serializers import (
-    OrderSerializer, CheckSerializer, ApiKeySerializer, ApiKeyCheckIDSerializer
-)
+from .serializers import OrderSerializer, CheckSerializer
 
 
 class OrdersAPIView(APIView):
     """Класс генерации pdf-файлов чеков для клиентов и для кухни."""
-    @classmethod
-    def post(cls, request, format=None):
-        order = OrderSerializer(data=request.data)
+    def post(self, format=None):
+        order = OrderSerializer(data=self.request.data)
         order.is_valid(raise_exception=True)
         order = order.data
         checks = Check.objects.filter(order=order)
@@ -68,10 +65,8 @@ class OrdersAPIView(APIView):
 
 class ChecksAPIView(APIView):
     """Класс передачи id сгенерированного чека по ключу api_key."""
-    def get(self, request, format=None):
-        data = ApiKeySerializer(data=request.data)
-        data.is_valid(raise_exception=True)
-        api_key = data.data.get('api_key')
+    def get(self, format=None):
+        api_key = self.request.query_params.get('api_key')
         printer = Printer.objects.filter(api_key=api_key).first()
         if not printer:
             return Response(
@@ -85,28 +80,29 @@ class ChecksAPIView(APIView):
 
 class CheckAPIView(APIView):
     """Класс передачи pdf-файла по параметрам api_key и id чека."""
-    def get(self, request, format=None):
-        data = ApiKeyCheckIDSerializer(data=request.data)
-        data.is_valid(raise_exception=True)
-        api_key = data.data.get('api_key')
-        check_id = data.data.get('check_id')
+    def get(self, format=None):
+        api_key = self.request.query_params.get('api_key')
+        check_id = self.request.query_params.get('check_id')
 
         printer = Printer.objects.filter(api_key=api_key).first()
         if not printer:
             return Response(
                 {'error': 'Ошибка авторизации'}, status=401
             )
-
-        check = Check.objects.filter(pk=check_id, printer=printer).first()
-        if not check:
-            return Response(
-                {'error': 'Данного чека не существует'},
-                status=400
-            )
-        elif not check.status == 'rendered':
-            return Response(
-                {'error': 'Для данного чека не сгенерирован PDF-файл'},
-                status=400
-            )
-        pdf_file = check.pdf_file.open()
-        return FileResponse(pdf_file, content_type='application/pdf')
+        if check_id.isdigit():
+            check = Check.objects.filter(pk=check_id, printer=printer).first()
+            if not check:
+                return Response(
+                    {'error': 'Данного чека не существует'},
+                    status=400
+                )
+            elif not check.status == 'rendered':
+                return Response(
+                    {'error': 'Для данного чека не сгенерирован PDF-файл'},
+                    status=400
+                )
+            pdf_file = check.pdf_file.open()
+            return FileResponse(pdf_file, content_type='application/pdf')
+        return Response(
+            {'error': 'Данного чека не существует'}, status=400
+        )

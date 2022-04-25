@@ -23,10 +23,6 @@ class OrderSerializer(serializers.Serializer):
     point_id = serializers.IntegerField(min_value=1)
 
 
-class ApiKeySerializer(serializers.Serializer):
-    api_key = serializers.CharField(max_length=255)
-
-
 class ApiKeyCheckIDSerializer(serializers.Serializer):
     api_key = serializers.CharField(max_length=255)
     check_id = serializers.IntegerField(min_value=0)
