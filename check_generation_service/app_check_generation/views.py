@@ -84,9 +84,7 @@ class ChecksAPIView(APIView):
 
 
 class CheckAPIView(APIView):
-    """
-    Класс передачи pdf файла по параметрам api_key и id чека.
-    """
+    """Класс передачи pdf файла по параметрам api_key и id чека."""
     def get(self, request, format=None):
         data = ApiKeyCheckIDSerializer(data=request.data)
         data.is_valid(raise_exception=True)
