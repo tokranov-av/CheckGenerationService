@@ -23,7 +23,7 @@ def get_check_pdf(api_key, check_id):
     response = requests.get(
         url_check, headers=headers, stream=True
     )
-    with open(os.path.join(MEDIA_ROOT, 'printing', 'file.pdf'), 'wb') as file:
+    with open(os.path.join(MEDIA_ROOT, 'printed', 'file.pdf'), 'wb') as file:
         file.write(response.content)
 
 

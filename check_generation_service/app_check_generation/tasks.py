@@ -25,12 +25,12 @@ def pdf_generation(order_data=None, check_type=None):
         pdf_file_name = '{0}_kitchen.pdf'.format(order_id)
         html = render_to_string('kitchen_check.html', context=order_data)
         current_check = Check.objects.filter(
-            order=order_data, type='kitchen').first()
+            order=order_data, type='kitchen')
     elif order_data and check_type == 'client_check':
         pdf_file_name = '{0}_client.pdf'.format(order_id)
         html = render_to_string('client_check.html', context=order_data)
         current_check = Check.objects.filter(
-            order=order_data, type='client').first()
+            order=order_data, type='client')
     else:
         html, current_check = None, None
 
@@ -42,9 +42,9 @@ def pdf_generation(order_data=None, check_type=None):
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, data=data, headers=headers)
 
-        with open(os.path.join(MEDIA_ROOT, pdf_file_name), 'wb') as file:
-            file.write(response.content)
+        with open(os.path.join(MEDIA_ROOT, 'pdf', pdf_file_name), 'wb') as f:
+            f.write(response.content)
 
-        current_check.pdf_file = pdf_file_name
-        current_check.status = 'rendered'
-        current_check.save(update_fields=['status', 'pdf_file'])
+        current_check.update(
+            pdf_file=os.path.join('pdf', pdf_file_name), status='rendered'
+        )
