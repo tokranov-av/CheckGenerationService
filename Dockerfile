@@ -6,3 +6,4 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install -r requirements.txt
 COPY check_generation_service /app/
+EXPOSE 8000
