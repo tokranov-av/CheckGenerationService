@@ -23,10 +23,10 @@ services:
 
   web:
     container_name: web_app
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    command: bash -c "python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+    build: .
+    command: bash -c "python check_generation_service/manage.py makemigrations &&
+      python check_generation_service/manage.py migrate --noinput &&
+      python check_generation_service/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -38,7 +38,7 @@ services:
 
   rq:
     build: .
-    command: python manage.py rqworker default
+    command: python check_generation_service/manage.py rqworker default
     links:
       - redis
     volumes:
