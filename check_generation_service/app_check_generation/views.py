@@ -85,7 +85,7 @@ class ChecksAPIView(APIView):
 
 class CheckAPIView(APIView):
     """
-    Класс передачи ссылки скачивания pdf файла по параметрам api_key и id чека.
+    Класс передачи pdf файла по параметрам api_key и id чека.
     """
     def get(self, request, format=None):
         data = ApiKeyCheckIDSerializer(data=request.data)
