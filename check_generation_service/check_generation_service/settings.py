@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'app_check_generation.apps.AppCheckGenerationConfig',
-    'app_check_print.apps.AppCheckPrintConfig',
     'django_rq',
 ]
 
