@@ -6,9 +6,7 @@ from check_generation_service.settings import MEDIA_ROOT
 url_new_checks = 'http://127.0.0.1:8000/new_checks/'
 url_check = 'http://127.0.0.1:8000/check/'
 api_key = 'key01'
-data = {
-    'api_key': api_key
-}
+data = {'api_key': api_key}
 headers = {'Content-Type': 'application/json'}
 
 response = requests.get(url_new_checks, data=json.dumps(data), headers=headers)
