@@ -65,7 +65,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 123456,
+        'PASSWORD': '123456',
         'HOST': 'db',
         'PORT': 5432,
     }
@@ -112,7 +112,7 @@ RQ_QUEUES = {
     'default': {
         'HOST': 'localhost',
         'PORT': 6379,
-        'DB': 8,
+        'DB': 0,
         'DEFAULT_TIMEOUT': 360,
     },
 }
