@@ -8,6 +8,66 @@
 
 Сервис разработан с использованием фреймворка Django и DRF, библиотки для асинхронных задач django_rq, docker-контейнера базы данных Postgres 9.6, инструмента формирования pdf-файлов wkhtmltopdf в виде docker-контейнера, и хранилища redis, которая также запускается в docker-контейнере.
 
-Проект собирается с помощью docker-compose
 
-Эндпоинты сервиса приведены в файле api.yml, расположенный в папке ТЗ
+Для запуска проекта должны быть установлены программы docker и docker-compose
+
+Порядок запуска:
+Введите следующие команды в терминале, при этом рабочая директория должна совпадать с расположением файла Dockerfile:
+1. Команды запуска проекта:
+```commandline
+docker-compose build
+```
+```commandline
+docker-compose up
+```
+2. В отдельно открытом окне терминала введите команду, после чего введите данные для регистрации суперпользователя в базе данных:
+```commandline
+docker exec -it web_app python check_generation_service/manage.py createsuperuser
+```
+3. Для загрузки фикстур модели Printer выполните команду:
+```commandline
+docker exec -it web_app python check_generation_service/manage.py loaddata printers.json
+```
+
+Эндпоинты доступа к сервису на локальной машине:
+
+1. Создание чеков для кухни и для клиента:
+
+POST: http://127.0.0.1:8000/create_checks/
+
+Передаваемые данные: 
+{
+  "id": 123456,
+  "price": 780,
+  "items": [
+    {
+      "name": "Вкусная пицца",
+      "quantity": 2,
+      "unit_price": 250
+    },
+    {
+      "name": "Не менее вкусные роллы",
+      "quantity": 1,
+      "unit_price": 280
+    }
+  ],
+  "address": "г. Уфа, ул. Ленина, д. 42",
+  "client": {
+    "name": "Иван",
+    "phone": 9173332222
+  },
+  "point_id": 1
+}
+
+2. Получение check_id (id чека) по api-key (ключ доступа к принтеру):
+
+api_key=key01
+
+http://127.0.0.1:8000/new_checks/?api_key=key01
+
+3. Получение pdf-файла по api-key и по check_id:
+
+api_key=key01
+check_id=1
+
+http://127.0.0.1:8000/check/?api_key=key01&check_id=1
