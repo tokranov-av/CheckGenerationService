@@ -17,7 +17,8 @@ django.setup()
 @job
 def pdf_generation(order_data=None, check_type=None):
     """Функция генерации pdf-файла чека."""
-    url = 'http://127.0.0.1:55000/'
+    url = 'http://172.17.0.1:55000/'
+    # url = 'http://127.0.0.1:55000/'
     pdf_file_name = 'file.pdf'
     order_id = order_data.get('id')
 

@@ -1,0 +1,42 @@
+[
+{
+  "model": "app_check_generation.printer",
+  "pk": 1,
+  "fields": {
+    "name": "Принтер 1",
+    "api_key": "key01",
+    "check_type": "kitchen",
+    "point_id": 1
+  }
+},
+{
+  "model": "app_check_generation.printer",
+  "pk": 2,
+  "fields": {
+    "name": "Принтер 2",
+    "api_key": "key02",
+    "check_type": "client",
+    "point_id": 1
+  }
+},
+{
+  "model": "app_check_generation.printer",
+  "pk": 3,
+  "fields": {
+    "name": "Принтер 3",
+    "api_key": "key03",
+    "check_type": "kitchen",
+    "point_id": 2
+  }
+},
+{
+  "model": "app_check_generation.printer",
+  "pk": 4,
+  "fields": {
+    "name": "Принтер 4",
+    "api_key": "key04",
+    "check_type": "client",
+    "point_id": 2
+  }
+}
+]

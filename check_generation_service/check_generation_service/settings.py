@@ -109,11 +109,8 @@ REST_FRAMEWORK = {
 
 RQ_QUEUES = {
     'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'DEFAULT_TIMEOUT': 360,
-    },
+        'URL': 'redis://redis/0',
+    }
 }
 
 STATIC_URL = '/static/'
