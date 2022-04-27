@@ -2,13 +2,13 @@ from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.http import FileResponse
-
 from .models import Check, Printer
 from .serializers import OrderSerializer, CheckSerializer
 from .services import create_checks
 
-# Не могу согласиться с неиспользованием Django Rest Framework, используемый
-# именно для API.
+
+# Не могу согласиться с неиспользованием Django Rest Framework, который
+# предназначен именно для API.
 
 
 class OrdersAPIView(APIView):
@@ -59,7 +59,6 @@ class ChecksAPIView(APIView):
     """Класс передачи id сгенерированного чека по ключу api_key."""
     def get(self, format=None):
         api_key = self.request.query_params.get('api_key')
-
         printer = Printer.objects.filter(api_key=api_key).first()
         if not printer:
             return Response(
