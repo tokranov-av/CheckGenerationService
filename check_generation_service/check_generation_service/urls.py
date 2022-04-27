@@ -8,10 +8,6 @@ urlpatterns = [
     path('', include('app_check_generation.urls')),
 ]
 
-# urlpatterns += [
-#     path('django-rq/', include('django_rq.urls'))
-# ]
-
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT

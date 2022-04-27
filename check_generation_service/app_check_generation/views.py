@@ -1,4 +1,3 @@
-import django_rq
 from django.db import transaction
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,6 +5,7 @@ from django.http import FileResponse
 
 from .models import Check, Printer
 from .serializers import OrderSerializer, CheckSerializer
+from .services import create_checks
 
 
 class OrdersAPIView(APIView):
@@ -42,24 +42,13 @@ class OrdersAPIView(APIView):
                 status='new'
             )
 
-        if kitchen_check and client_check:
-            queue_1 = django_rq.get_queue('default')
-            queue_1.enqueue(
-                'app_check_generation.tasks.pdf_generation',
-                order_data=order,
-                check_type='kitchen_check'
-            )
-            queue_2 = django_rq.get_queue('default')
-            queue_2.enqueue(
-                'app_check_generation.tasks.pdf_generation',
-                order_data=order,
-                check_type='client_check'
-            )
+        if not (kitchen_check and client_check):
             return Response(
-                {'ok': 'Чеки успешно созданы'}, status=200
-            )
+                {'error': 'Возникла ошибка при создании чеков'}, status=400)
+
+        create_checks(order=order)
         return Response(
-            {'error': 'Возникла ошибка при создании чеков'}, status=400
+            {'ok': 'Чеки успешно созданы'}, status=200
         )
 
 
@@ -67,14 +56,16 @@ class ChecksAPIView(APIView):
     """Класс передачи id сгенерированного чека по ключу api_key."""
     def get(self, format=None):
         api_key = self.request.query_params.get('api_key')
+
         printer = Printer.objects.filter(api_key=api_key).first()
         if not printer:
             return Response(
                 {'error': 'Ошибка авторизации'}, status=401
             )
-        queryset = Check.objects.filter(printer=printer, status='rendered')
+
+        checks = Check.objects.filter(printer=printer, status='rendered')
         return Response(
-            {"checks": CheckSerializer(queryset, many=True).data}, status=200
+            {"checks": CheckSerializer(checks, many=True).data}, status=200
         )
 
 
@@ -84,25 +75,27 @@ class CheckAPIView(APIView):
         api_key = self.request.query_params.get('api_key')
         check_id = self.request.query_params.get('check_id')
 
+        if not check_id.isdigit():
+            return Response(
+                {'error': 'Данного чека не существует'}, status=400
+            )
+
         printer = Printer.objects.filter(api_key=api_key).first()
         if not printer:
             return Response(
                 {'error': 'Ошибка авторизации'}, status=401
             )
-        if check_id.isdigit():
-            check = Check.objects.filter(pk=check_id, printer=printer).first()
-            if not check:
-                return Response(
-                    {'error': 'Данного чека не существует'},
-                    status=400
-                )
-            elif not check.status == 'rendered':
-                return Response(
-                    {'error': 'Для данного чека не сгенерирован PDF-файл'},
-                    status=400
-                )
-            pdf_file = check.pdf_file.open()
-            return FileResponse(pdf_file, content_type='application/pdf')
-        return Response(
-            {'error': 'Данного чека не существует'}, status=400
-        )
+
+        check = Check.objects.filter(pk=check_id, printer=printer).first()
+        if not check:
+            return Response(
+                {'error': 'Данного чека не существует'},
+                status=400
+            )
+        elif not check.status == 'rendered':
+            return Response(
+                {'error': 'Для данного чека не сгенерирован PDF-файл'},
+                status=400
+            )
+        pdf_file = check.pdf_file.open()
+        return FileResponse(pdf_file, content_type='application/pdf')

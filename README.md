@@ -20,7 +20,7 @@ docker-compose build
 ```commandline
 docker-compose up
 ```
- Примечание - В случае незапуска сервера при вводе команды "docker-compose up" остановите сервер нажатием на клавиш Ctrl+C, после чего повторите ввод команды "docker-compose up" снова.
+ Примечание - В случае незапуска сервера при вводе команды "docker-compose up" остановите сервер нажатием на клавиш Ctrl+C, после чего повторите ввод команды "docker-compose up".
 2. В отдельно открытом окне терминала введите команду, после чего введите данные для регистрации суперпользователя в базе данных:
 ```commandline
 docker exec -it web_app python check_generation_service/manage.py createsuperuser
@@ -36,7 +36,9 @@ docker exec -it web_app python check_generation_service/manage.py loaddata print
 
 POST: http://127.0.0.1:8000/create_checks/
 
-Передаваемые данные: 
+Передаваемые данные:
+
+```json
 {
   "id": 123456,
   "price": 780,
@@ -59,6 +61,7 @@ POST: http://127.0.0.1:8000/create_checks/
   },
   "point_id": 1
 }
+```
 
 2. Получение check_id (id чека) по api-key (ключ доступа к принтеру):
 
