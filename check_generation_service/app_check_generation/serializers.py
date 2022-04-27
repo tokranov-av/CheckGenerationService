@@ -3,12 +3,14 @@ from .models import Check
 
 
 class ItemsSerializer(serializers.Serializer):
+    """Сериализатор для данных заказа."""
     name = serializers.CharField(max_length=255)
     quantity = serializers.IntegerField(min_value=1)
     unit_price = serializers.IntegerField(min_value=1)
 
 
 class ClientSerializer(serializers.Serializer):
+    """Сериализатор для данных клиента."""
     name = serializers.CharField(max_length=255)
     phone = serializers.IntegerField()
 

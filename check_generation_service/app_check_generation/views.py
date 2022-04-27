@@ -7,9 +7,8 @@ from .models import Check, Printer
 from .serializers import OrderSerializer, CheckSerializer
 from .services import create_checks
 
-# Не могу согласиться с неиспользованием DRF - особенно для проверки входных
-# данных и автоматического ответа если что-то не так. Конечно, возможно я
-# ошибаюсь из-за небольшого опыта
+# Не могу согласиться с неиспользованием Django Rest Framework, используемый
+# именно для API.
 
 
 class OrdersAPIView(APIView):

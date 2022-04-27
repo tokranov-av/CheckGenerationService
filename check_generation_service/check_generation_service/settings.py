@@ -58,7 +58,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '123456',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': 5432,
     }
 }
@@ -102,8 +102,11 @@ REST_FRAMEWORK = {
 
 RQ_QUEUES = {
     'default': {
-        'URL': 'redis://redis/0',
-    }
+        'HOST': 'localhost',
+        'PORT': 6379,
+        'DB': 0,
+        'DEFAULT_TIMEOUT': 360,
+    },
 }
 
 STATIC_URL = '/static/'
