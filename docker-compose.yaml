@@ -21,28 +21,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123456
 
-  web:
-    container_name: web_app
-    build: .
-    command: bash -c "python check_generation_service/manage.py makemigrations &&
-      python check_generation_service/manage.py migrate --noinput &&
-      python check_generation_service/manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    links:
-      - redis
-
-  rq:
-    build: .
-    command: python check_generation_service/manage.py rqworker default
-    links:
-      - redis
-    volumes:
-      - .:/app
 
 volumes:
   pg_data:

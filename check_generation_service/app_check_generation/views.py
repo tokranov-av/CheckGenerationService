@@ -7,6 +7,10 @@ from .models import Check, Printer
 from .serializers import OrderSerializer, CheckSerializer
 from .services import create_checks
 
+# Не могу согласиться с неиспользованием DRF - особенно для проверки входных
+# данных и автоматического ответа если что-то не так. Конечно, возможно я
+# ошибаюсь из-за небольшого опыта
+
 
 class OrdersAPIView(APIView):
     """Класс генерации pdf-файлов чеков для клиентов и для кухни."""
