@@ -29,8 +29,6 @@ class Printer(models.Model):
         blank=False,
         verbose_name='Точки, к которым привязаны принтеры'
     )
-    # Предлагалось добавить verbose_name_plural - для поля нет возможности
-    # добавить данный параметр
 
     def __str__(self):
         return self.name

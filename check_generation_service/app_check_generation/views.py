@@ -7,10 +7,6 @@ from .serializers import OrderSerializer, CheckSerializer
 from .services import create_checks
 
 
-# Не могу согласиться с неиспользованием Django Rest Framework, который
-# предназначен именно для API.
-
-
 class OrdersAPIView(APIView):
     """Класс генерации pdf-файлов чеков для клиентов и для кухни."""
     def post(self, format=None):
